@@ -279,7 +279,7 @@ def run(cities, families=5, workers=200, random_points=False, display=True):
 
 if __name__ == "__main__":
     import argparse
-
+ 
     parser = argparse.ArgumentParser(description="""Python Travelling Sales Man Genetic Algorithm -- \n\n
                                                     
                                                     
