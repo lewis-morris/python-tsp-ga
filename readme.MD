@@ -21,7 +21,7 @@ pip install -r requirements.txt
 
 Basic:
 
-In download directly run 
+In download directory 
 
 ```
 python tsp.py
