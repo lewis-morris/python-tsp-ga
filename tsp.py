@@ -271,10 +271,6 @@ def run(cities, families=5, workers=200, breed=20, random_points=False, display=
         # increment run no
         run += 1
 
-        #quit if cant find answer
-        if best_run*3 < run and run > 100:
-            return None
-
         if run % breed == 0:
             # breed between families every 20 runs and update.
             families = breed_families(families)

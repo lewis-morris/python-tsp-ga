@@ -4,6 +4,7 @@
 
 - Genetic algorithms mimic the reproductive traits of living organisms which, pass down genetic traits from two parents to their offspring.
 
+> My implementation uses a concept I'm coining "families". Workers are grouped into these families are interbred every generation and then random bred between families every n generations.
 
 #### Install dependencies
 
@@ -49,4 +50,9 @@ optional arguments:
                         (points are randomly selected in the 'map' space)
   -d DRAW, --draw DRAW  Draw the output onscreen. 0= no 1= yes
 
+```
+
+i.e 
+```
+python tsp.py -c 50 -w 100 -f 10 -b 30 -r 1 -d 10
 ```
