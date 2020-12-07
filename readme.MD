@@ -39,10 +39,14 @@ optional arguments:
                         The amount of workers per family generation
   -f FAMILIES, --families FAMILIES
                         The amount of families per generation
+  -b BREED, --breed BREED
+                        Generation number to breed between families on ... i.e
+                        every n times
   -r RANDOM, --random RANDOM
                         Draw the cities randomly on the map or equally spaced.
                         0= equally (draws a perfect polygon of n sides, which
                         is easy to determine when complete) 1= randomly
                         (points are randomly selected in the 'map' space)
   -d DRAW, --draw DRAW  Draw the output onscreen. 0= no 1= yes
+
 ```
