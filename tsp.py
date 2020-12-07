@@ -26,7 +26,6 @@ class City:
 class Map:
     """
     hold the map details
-
     """
 
     def __init__(self, h, w, cities=None, points=None):
@@ -58,7 +57,7 @@ class Worker:
     def __init__(self, mapp):
 
         # randomly init their first route
-        cities = [i for i, x in enumerate(mapp.cities)]
+        cities = np.arange(mapp.no_cities)
         random.shuffle(cities)
         self.route = cities
         self.mapp = mapp
@@ -104,7 +103,7 @@ class Worker:
         else:
 
             for i, x in enumerate(self.route):
-                if random.randint(0, 100) < 5:
+                if random.randint(0, 100) <= 5:
                     current = self.route[i]
                     nextt = current
                     while nextt != current:
@@ -124,7 +123,11 @@ class Family:
 
     def sort_workers(self):
         self.workers = sorted(self.workers, key=lambda item: item.get_distance())
-        self.eliete = self.workers[:int(len(self.workers) * 0.02)]
+        eliete = int(len(self.workers) * 0.02)
+        if eliete < 3:
+            eliete = 4
+        self.eliete = self.workers[:eliete
+                      ]
         self.best_score = self.eliete[0].get_distance()
         self.best_worker = self.eliete[0]
         self.breed()
@@ -173,9 +176,9 @@ def get_round_points(no):
     point = Point(400, 400)
     starting_point = Point((40, 440))
     points_list = []
-    for x in np.linspace(0, 360, no):
+    for x in np.linspace(0, 360, no+1):
         points_list.append(rotate(starting_point, x, origin=point))
-    return [[int(x.x), int(x.y)] for x in points_list]
+    return [[int(x.x), int(x.y)] for x in points_list][:-1]
 
 
 def strfdelta(tdelta, fmt):
@@ -195,13 +198,13 @@ def breed_families(families, best_only=False):
     return families
 
 
-def run(cities, families=5, workers=200, random_points=False, display=True):
+def run(cities, families=5, workers=200, breed=20, random_points=False, display=True):
     # zero best score
     best_dist = 99999999
 
     # ser run no
     run = 0
-
+    best_run = 0
     # load cities - if not random then evenly spaces (this way is easier to see if complete)
     if random_points:
         maps = Map(800, 800, cities, None)
@@ -246,13 +249,33 @@ def run(cities, families=5, workers=200, random_points=False, display=True):
 
         # print best score if better than last best
         if best_score < best_dist:
+            best_run = run
+
             best_dist = best_score
-            best_text = f"Best distance : {best_dist:.2f} on generation # {run}"
+            best_text = f"Best distance : {families[0].best_worker.get_distance():.2f} on generation # {run}"
+            #for benchmark
+
+            if not random_points:
+                route = families[0].best_worker.route
+                if not type(route) is list:
+                    route = route.tolist()
+
+                route = np.roll(route, -route.index(0))
+                route_reversed = route[::-1]
+                if np.all(np.diff(route)==1) or np.all(np.diff(route_reversed)==1) is True :
+                    time2 = datetime.datetime.utcnow()
+                    print(f"\nBest Route Found : {(time2 - time).total_seconds():.2f} seconds")
+                    return (time2 - time)
+
 
         # increment run no
         run += 1
 
-        if run % 20 == 0:
+        #quit if cant find answer
+        if best_run*3 < run and run > 100:
+            return None
+
+        if run % breed == 0:
             # breed between families every 20 runs and update.
             families = breed_families(families)
 
@@ -280,23 +303,25 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(description="""Python Travelling Sales Man Genetic Algorithm -- \n\n
-                                                    
-                                                    
+
+
                                                     Calculating the shortest distance between n points.                                                     
                                                  """)
     parser.add_argument("-c", "--cities", default=50, type=int,
                         help="This is the amount of 'cities' to add to the map or the hardness of the calculation")
     parser.add_argument("-w", "--workers", default=200, type=int, help="The amount of workers per family generation")
     parser.add_argument("-f", "--families", default=5, type=int, help="The amount of families per generation")
+    parser.add_argument("-b", "--breed", default=20, type=int, help="Generation number to breed between families on ... i.e every n times")
     parser.add_argument("-r", "--random", default=0, type=int,
                         help="Draw the cities randomly on the map or equally spaced. 0= equally (draws a perfect polygon of n sides, which is easy to determine when complete) 1= randomly (points are randomly selected in the 'map' space)")
     parser.add_argument("-d", "--draw", default=1, type=int, help="Draw the output onscreen. 0= no 1= yes")
 
     args = parser.parse_args()
-    cities = args.c
-    workers = args.w
-    families = args.f
-    random_points = True if args.r == 1 else False
-    draw = True if args.d == 1 else False
+    cities = args.cities
+    workers = args.workers
+    families = args.families
+    breed = args.breed
+    random_points = True if args.random == 1 else False
+    draw = True if args.draw == 1 else False
 
-    run(cities, families, workers, random_points, draw)
+    run(cities, families, workers, breed, random_points, draw)
