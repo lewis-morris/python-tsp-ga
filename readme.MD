@@ -29,6 +29,7 @@ python tsp.py
 
 Advanced:
 
+```
 optional arguments:
   -h, --help            show this help message and exit
   -c CITIES, --cities CITIES
@@ -44,6 +45,4 @@ optional arguments:
                         is easy to determine when complete) 1= randomly
                         (points are randomly selected in the 'map' space)
   -d DRAW, --draw DRAW  Draw the output onscreen. 0= no 1= yes
-
-
-- 
+```
