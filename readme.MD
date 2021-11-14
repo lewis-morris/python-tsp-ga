@@ -54,5 +54,5 @@ optional arguments:
 
 i.e 
 ```
-python tsp.py -c 50 -w 100 -f 10 -b 30 -r 1 -d 10
+python tsp.py -c 50 -w 100 -f 10 -b 30 -r 1 -d 1
 ```
